@@ -1,5 +1,5 @@
 import click, glob, tqdm
-from mkv_utils import compress_mkv
+from mkv_extract.mkv_utils import compress_mkv
 
 @click.command()
 @click.argument('input-path', type=str)
