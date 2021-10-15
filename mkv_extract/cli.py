@@ -9,7 +9,7 @@ from mkv_extract.mkv_utils import compress_mkv
 @click.option('--wall-time', type=str, default='30:00', help="Wall time")
 @click.option('--partition', type=str, default='short', help="Partition name")
 def main(input_path, slurm, cores, memory, wall_time, partition):
-    mkvfiles = glob.glob(input_path)
+    mkvfiles = [f for f in glob.glob(input_path) if f.endswith('.mkv')]
     if slurm:
         assert wall_time, 'To use slurm, you must specify --wall-time'
         assert memory,    'To use slurm, you must specify --memory'
