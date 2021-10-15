@@ -14,22 +14,14 @@ Extracts each video stream from the mkv file and saves to a compressed video fil
 * There is an option to delete .mkv files after extraction. Prior to deletion, the losslessly encoded .avi files will be scanned, and deletion will only occur if they are identical to the original .mkv data.
 
 ## Usage
-Scenario 1: Extracting a single file
-`mkv-extract path/to/my_recoridng.mkv`
-
-Scenario 2: Extracting multiple files
-`mkv-extract path/to/*.mkv`
-
-Scenario 3: Extracting multiple files using slurm
-`mkv-extract path/to/*.mkv --slurm`
-
-Scenario 4: Extraction followed by deletion
-`mkv-extract [ARGS] --delete`
-
-Scenario 5: Running extraction from python
+* Extracting a single file: `mkv-extract path/to/my_recoridng.mkv`
+* Extracting multiple files: `mkv-extract path/to/*.mkv`
+* Extracting multiple files using slurm: `mkv-extract path/to/*.mkv --slurm`
+* Extraction followed by deletion: `mkv-extract [ARGS] --delete`
+* Running extraction from python:
 ```
 from mkv_extract.mkv_utils import *
 ....
 ```
 
-*Note: Make sure ffmpeg is installed. If using HMS O2, you must run `module load ffmpeg`.*
+*Note: This tool required ffmpeg. If using HMS O2, you must run `module load ffmpeg`.*
