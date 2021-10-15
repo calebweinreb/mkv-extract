@@ -207,6 +207,7 @@ def check_mkv_extraction_integrity(input_file, output_prefix, verbose=True, thre
     # detect which streams are present (ir, color, depth)
     integrity_check = True
     streams = get_stream_names(input_file)
+    timestamps = np.loadtxt(output_prefix+'.timestamps.txt')
     for stream_name,ix in streams.items():
         
         if stream_name in ['DEPTH','IR']:
