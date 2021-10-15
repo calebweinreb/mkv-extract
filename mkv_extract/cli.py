@@ -1,4 +1,4 @@
-import click, glob, tqdm
+import click, glob, tqdm, os
 from mkv_extract.mkv_utils import compress_mkv
 
 @click.command()
