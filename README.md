@@ -24,4 +24,4 @@ from mkv_extract.mkv_utils import *
 ....
 ```
 
-*Note: This tool required ffmpeg. If using HMS O2, you must run `module load ffmpeg`.*
+*Note: This tool requires ffmpeg. If using HMS O2, you must run `module load ffmpeg`.*
