@@ -15,8 +15,8 @@ Extracts each video stream from the mkv file and saves to a compressed video fil
 
 ## Usage
 * Extracting a single file: `mkv-extract path/to/my_recoridng.mkv`
-* Extracting multiple files: `mkv-extract path/to/*.mkv`
-* Extracting multiple files using slurm: `mkv-extract path/to/*.mkv --slurm`
+* Extracting multiple files: `mkv-extract "path/to/*.mkv"`
+* Extracting multiple files using slurm: `mkv-extract "path/to/*.mkv" --slurm`
 * Extraction followed by deletion: `mkv-extract [ARGS] --delete`
 * Running extraction from python:
 ```
