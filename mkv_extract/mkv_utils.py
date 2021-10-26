@@ -73,6 +73,7 @@ def extract_timestamps_from_mkv(input_file, threads=8, mapping='DEPTH'):
         input_file
     ] 
     output = subprocess.run(command, stdout=subprocess.PIPE).stdout
+    print(output, flush=True)
     timestamps = [float(t['pkt_pts_time']) for t in json.loads(output.decode('utf-8'))['frames']]
     return timestamps
 
