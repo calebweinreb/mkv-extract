@@ -11,6 +11,9 @@ from mkv_extract.mkv_utils import compress_mkv
 @click.option('--partition', type=str, default='short', help="Partition name")
 def main(input_path, delete, slurm, cores, memory, wall_time, partition):
     mkvfiles = [f for f in glob.glob(input_path) if f.endswith('.mkv')]
+    if len(mkvfiles)==0: 
+        print('ALERT: there are no .mkv files matching the path '+input_path)
+        
     if slurm:
         assert wall_time, 'To use slurm, you must specify --wall-time'
         assert memory,    'To use slurm, you must specify --memory'
@@ -24,6 +27,7 @@ def main(input_path, delete, slurm, cores, memory, wall_time, partition):
         for mkvfile in mkvfiles:
             os.system('sbatch -p {} -t {} --mem {} -c {} --wrap """mkv-extract {} {}"""'.format(
                 partition, wall_time, memory, cores, mkvfile, '--delete' if delete else ''))
+            
     else:
         for mkvfile in tqdm.tqdm(mkvfiles):
             compress_mkv(mkvfile, verbose=True, delete=delete)
