@@ -4,7 +4,7 @@ from mkv_extract.mkv_utils import compress_mkv
 @click.command()
 @click.argument('input-path', type=str)
 @click.option('--slurm/--no-slurm', default=False, help='Submit a slurm job for each .mkv file')
-@click.option('--delete/--no-delete', default='False', help='Delete the .mkv file after compressing')
+@click.option('--delete/--no-delete', default=False, help='Delete the .mkv file after compressing')
 @click.option('--cores', type=int, default=4, help="Number of cores")
 @click.option('--memory', type=str, default="8GB", help="RAM string")
 @click.option('--wall-time', type=str, default='30:00', help="Wall time")
