@@ -5,6 +5,8 @@ import tqdm
 import datetime
 import numpy as np
 
+import pdb
+
 def get_stream_names(input_file, stream_tag="title"):
     '''
     Runs an FFProbe command to determine whether an input video file contains multiple streams, and
@@ -98,26 +100,37 @@ def extract_metadata_from_mkv(input_file):
     output = subprocess.run(command, stdout=subprocess.PIPE).stdout
     return json.loads(output.decode('utf-8'))
 
-def compress_mkv(input_file, verbose=True, output_prefix=None, delete=False):
+def compress_mkv(input_file, verbose=True, output_prefix=None, delete=False, overwrite=False):
     if verbose: print('Extracting',input_file)
     if output_prefix is None:
         base_filename = os.path.splitext(os.path.basename(input_file))[0]
         output_prefix = os.path.join(os.path.dirname(input_file),base_filename)
         
     # extract metadata (including timestamps and calibration params)
-    if verbose: print('* extracting metadata')
-    metadata = extract_metadata_from_mkv(input_file)
-    metadata['calibration'] = extract_calibration_from_mkv(input_file)
-    json.dump(metadata, open(output_prefix+'.metadata.json','w'), indent=4)
+    fname = output_prefix+'.metadata.json'
+    if os.path.exists(fname) and not overwrite:
+        if verbose: print('* metadata already exists, continuing...')
+    else:
+        if verbose: print('* extracting metadata')
+        metadata = extract_metadata_from_mkv(input_file)
+        metadata['calibration'] = extract_calibration_from_mkv(input_file)
+        json.dump(metadata, open(fname,'w'), indent=4)
     
-    if verbose: print('* extracting timestamps')
-    timestamps = extract_timestamps_from_mkv(input_file)
-    timestamps_txt = '\n'.join([str(t) for t in timestamps])
-    open(output_prefix+'.timestamps.txt','w').write(timestamps_txt)
+    fname = output_prefix+'.timestamps.txt'
+    if os.path.exists(fname) and not overwrite:
+        if verbose: print('* timestamps already extracted, continuing...')
+    else:
+        if verbose: print('* extracting timestamps')
+        timestamps = extract_timestamps_from_mkv(input_file)
+        timestamps_txt = '\n'.join([str(t) for t in timestamps])
+        open(fname,'w').write(timestamps_txt)
     
     # extract frames
-    if verbose: print('* extracting frames')
-    extract_frames_from_mkv(input_file, output_prefix, verbose=verbose)
+    if all([os.path.exists(prefix + suffix) for prefix in [output_prefix] for suffix in ['.depth.avi', '.ir.avi']]) and not overwrite:
+        if verbose: print('* frames already extracted, continuing...')    
+    else:
+        if verbose: print('* extracting frames')
+        extract_frames_from_mkv(input_file, output_prefix, verbose=verbose)
     
     # check compression integrity and delete
     if delete: check_mkv_extraction_integrity(input_file, output_prefix, delete=True)
@@ -214,6 +227,10 @@ def check_mkv_extraction_integrity(input_file, output_prefix, verbose=True, thre
         if stream_name in ['DEPTH','IR']:
             print('Checking integrity of {} compression'.format(stream_name))
             output_file = output_prefix+'.'+stream_name.lower()+'.avi'
+            if not os.path.exists(input_file):
+                print(f'Looks like {output_file} for stream {stream_name} was already deleted, continuing...')
+                continue
+
             if not os.path.exists(output_file):
                 print('Integrity check failed for stream {}: The file {} was not found'.format(
                     stream_name, output_file))
