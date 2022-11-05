@@ -10,7 +10,7 @@ import pdb
 def get_stream_names(input_file, stream_tag="title"):
     '''
     Runs an FFProbe command to determine whether an input video file contains multiple streams, and
-     returns a stream_name to paired int values to extract the desired stream.
+    returns a dict mapping stream_name to paired int values to extract the desired stream.
     If no streams are detected, then the 0th (default) stream will be returned and used.
     Parameters
     ----------
@@ -19,7 +19,7 @@ def get_stream_names(input_file, stream_tag="title"):
     Returns
     -------
     out (dict): Dictionary of string to int pairs for the included streams in the mkv file.
-     Dict will be used to choose the correct mapping number to choose which stream to read in read_frames().
+    Dict will be used to choose the correct mapping number to choose which stream to read in read_frames().
     '''
     command = [
         "ffprobe",
@@ -49,7 +49,7 @@ def extract_frames_from_mkv(input_file, output_prefix, verbose=True, threads=8):
         command = [
             'ffmpeg',
             '-y',
-            '-vsync','0',
+            '-vsync','drop',
             '-i', input_file,
             '-threads', str(threads),
             '-map','0:{}'.format(ix),
